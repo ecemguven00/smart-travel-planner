@@ -1,7 +1,12 @@
 import pandas as pd
 import streamlit as st
+import os
 
-FILE_KEY = "Worldwide_Travel_Cities_WithAirport_Precipitation.csv"
+# --- FILE PATH SETTINGS  ---
+# Finds the exact directory where this script is located.
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Constructs the full path to the CSV file, assuming it's in the same directory.
+FILE_PATH = os.path.join(SCRIPT_DIR, "Worldwide_Travel_Cities_WithAirport_Precipitation.csv")
 
 # --- CONSTANTS ---
 ACTIVITY_LABELS = {
@@ -31,10 +36,11 @@ SPECIAL_FILTERS = {
 ACTIVITY_COLS = list(ACTIVITY_LABELS.keys())
 
 @st.cache_data
-def load_data(file_path=FILE_KEY):
+def load_data():
     try:
+        # We use the FILE_PATH variable to avoid path errors
         df = pd.read_csv(
-            file_path,
+            FILE_PATH,
             sep=',',
             quotechar='"',
             escapechar='\\',
@@ -42,7 +48,7 @@ def load_data(file_path=FILE_KEY):
             engine='python'
         )
     except FileNotFoundError:
-        st.error(f"CSV file not found: {file_path}. Please make sure the file is in the same directory.")
+        st.error(f"CSV file not found at: {FILE_PATH}. Please make sure the file is in the same directory as this script.")
         return pd.DataFrame()
     except Exception as e:
         st.error(f"Critical CSV Read Error: {e}")
