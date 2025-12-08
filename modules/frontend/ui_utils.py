@@ -45,18 +45,23 @@ def reset_app():
     st.rerun()
 
 
-# --- URL NORMALIZER ---
+# --- URL NORMALIZER (UPDATED) ---
 def normalize_for_url(text):
     """Converts text to a URL-friendly slug (e.g., 'İstanbul' -> 'istanbul')."""
-    text = str(text).lower()
-    # Manual replacements for specific Turkish characters
+    text = str(text)
+
+
     replacements = {
         'ı': 'i', 'ğ': 'g', 'ü': 'u', 'ş': 's', 'ö': 'o', 'ç': 'c',
-        'İ': 'i', 'Ğ': 'g', 'Ü': 'u', 'Ş': 's', 'Ö': 'o', 'Ç': 'c'
+        'İ': 'i', 'Ğ': 'g', 'Ü': 'u', 'Ş': 's', 'Ö': 'o', 'Ç': 'c',
+        'I': 'i'  
     }
     for src, dest in replacements.items():
         text = text.replace(src, dest)
 
-    # General unicode normalization
+    # 2. Now convert to lowercase and normalize unicode
+    text = text.lower()
     text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
+
+    # 3. Final cleanup: replace spaces with hyphens, remove dots/apostrophes
     return text.replace(" ", "-").replace(".", "").replace("'", "")
