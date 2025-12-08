@@ -57,3 +57,48 @@ def create_heatmap(df, selected_activities):
     ).properties(height=max(300, len(df) * 30))
 
     return heatmap
+
+
+def create_pca_scatter_plot(pca_df, color_col=None):
+    """Creates a scatter plot of PCA components."""
+    if 'PC1' not in pca_df.columns or 'PC2' not in pca_df.columns:
+        return None
+
+    color_encoding = alt.Color(color_col, title=color_col) if color_col and color_col in pca_df.columns else alt.value(
+        '#1f77b4')
+
+    scatter = alt.Chart(pca_df).mark_circle(size=100, opacity=0.6).encode(
+        x=alt.X('PC1', title='First Principal Component (PC1)'),
+        y=alt.Y('PC2', title='Second Principal Component (PC2)'),
+        color=color_encoding,
+        tooltip=['city', 'country', 'region'] + [col for col in pca_df.columns if col.startswith('PC')]
+    ).interactive()
+
+    return scatter
+
+
+def create_cluster_visualization(clustered_df):
+    """Creates visualizations for clustered data."""
+    if 'cluster' not in clustered_df.columns:
+        return None, None
+
+    # Scatter plot: PC1 vs PC2 colored by cluster
+    scatter = alt.Chart(clustered_df).mark_circle(size=100, opacity=0.6).encode(
+        x=alt.X('latitude', title='Latitude'),
+        y=alt.Y('longitude', title='Longitude'),
+        color=alt.Color('cluster:N', title='Cluster', scale=alt.Scale(scheme='category20')),
+        tooltip=['city', 'country', 'cluster']
+    ).interactive()
+
+    # Bar chart: Cluster distribution
+    cluster_counts = clustered_df['cluster'].value_counts().reset_index()
+    cluster_counts.columns = ['cluster', 'count']
+    cluster_counts = cluster_counts.sort_values('cluster')
+
+    bar_chart = alt.Chart(cluster_counts).mark_bar().encode(
+        x=alt.X('cluster:N', title='Cluster'),
+        y=alt.Y('count', title='Number of Cities'),
+        color=alt.Color('cluster:N', scale=alt.Scale(scheme='category20'))
+    ).properties(height=300)
+
+    return scatter, bar_chart
