@@ -318,4 +318,57 @@ def plot_cumulative_variance(explained_variance, save_path=None):
     else:
         plt.show()
 
-    plt.close()   
+    plt.close()
+    
+def plot_elbow_method(df, use_pca=True, pca_components=11, max_k=15, save_path=None):
+    """
+    df : pandas.DataFrame
+        Veri seti
+    use_pca : bool
+        PCA kullanılsın mı? (Genelde True olmalı)
+    pca_components : int
+        PCA bileşen sayısı
+    max_k : int
+        Denenecek maksimum küme sayısı (Genelde 10-15 yeterli)
+    save_path : str
+        Grafiğin kaydedileceği yol
+    """
+    
+    
+    print(f"Elbow analizi yapılıyor (1'den {max_k}'e kadar deneniyor)...")
+    
+    # 1. Veriyi ve Ayarları Hazırla
+    features_df, _ = prepare_features_for_clustering(df)
+    scaler = StandardScaler()
+    features_scaled = scaler.fit_transform(features_df)
+    
+    if use_pca:
+        pca = PCA(n_components=pca_components)
+        features_scaled = pca.fit_transform(features_scaled)
+    
+    # 2. Döngüye Gir: Her K değerini dene 1, 2, 3... 15
+    inertias = []
+    k_range = range(1, max_k + 1)
+    
+    for k in k_range:
+        # random_state=42 sayesinde sonuçlar hep aynı çıkar
+        kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+        kmeans.fit(features_scaled)
+        inertias.append(kmeans.inertia_) # Hata değerini kaydet
+        
+    # 3. Grafiği Çiz
+    plt.figure(figsize=(10, 6))
+    plt.plot(k_range, inertias, 'bo-', markersize=8)
+    plt.xlabel('Küme Sayısı (k)')
+    plt.ylabel('Hata Değeri (Inertia)')
+    plt.title(f'Elbow Method Analizi (PCA Bileşen: {pca_components})')
+    plt.grid(True)
+    plt.xticks(k_range)
+    
+    if save_path:
+        plt.savefig(save_path, dpi=300)
+        print(f"Grafik kaydedildi: {save_path}")
+    else:
+        plt.show()
+    
+    plt.close()

@@ -19,7 +19,8 @@ from feature_engineering import (
     analyze_clusters,
     get_cluster_characteristics,
     plot_correlation_matrix,
-    plot_cumulative_variance
+    plot_cumulative_variance,
+    plot_elbow_method
 )
 from data_manager import load_data
 import pandas as pd
@@ -86,7 +87,24 @@ def main():
     print(f"\nToplam açıklanan varyans: {sum(explained_variance):.4f} ({sum(explained_variance)*100:.2f}%)")
     print(f"\nPCA sonuçlarının ilk 5 satırı:")
     print(pca_df[['city', 'country'] + [f'PC{i+1}' for i in range(min(3, len(explained_variance)))]].head())
+    print(f"\nPCA sonuçlarının ilk 5 satırı:")
+    print(pca_df[['city', 'country'] + [f'PC{i+1}' for i in range(min(3, len(explained_variance)))]].head())
     
+     # Elbow Method Grafiği
+    
+    print("\n" + "=" * 60)
+    print("2.5 Elbow Method Analizi (En iyi küme sayısını bulmak için)")
+    print("=" * 60)
+    
+    
+    plot_elbow_method(
+        df,
+        use_pca=True,       # PCA ile sıkıştırılmış veriyi kullan
+        pca_components=11,  # 11 bileşen üzerinden hesapla
+        max_k=15,           # 1'den 15 kümeye kadar dene
+        save_path=os.path.join(plots_dir, "elbow_method.png")
+    )
+
     # K-means Clustering (PCA olmadan)
     print("\n" + "=" * 60)
     print("3. K-means Clustering Uygulanıyor (PCA olmadan)...")
