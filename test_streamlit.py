@@ -3,15 +3,16 @@
 import sys
 import os
 
-# Path'leri ayarla
+# Path configuration
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'modules', 'frontend'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'modules', 'backend'))
 
 try:
     print("=" * 60)
     print("Streamlit Uygulaması Test")
     print("=" * 60)
     
-    # Import testleri
+    # Import tests
     print("\n1. Modül importları test ediliyor...")
     from data_manager import load_data
     print("   ✓ data_manager import edildi")
@@ -24,7 +25,21 @@ try:
     
     from ui_pages_results import show_results_page
     print("   ✓ ui_pages_results import edildi")
-    
+
+    import app as my_backend
+
+    print("   ✓ backend/app (API) import edildi")
+
+    import ui_pages_detail as my_details
+
+    print("   ✓ frontend/ui_pages_detail import edildi")
+
+    print("\n2.1 Senin detay sayfan çağrılıyor...")
+    df = load_data()
+    if 'streamlit' in sys.modules:
+        import ui_pages_detail
+
+        ui_pages_detail.show_details_page(df)
     # Veri yükleme testi
     print("\n2. Veri yükleme test ediliyor...")
     df = load_data()

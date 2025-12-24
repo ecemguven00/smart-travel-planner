@@ -7,6 +7,10 @@
     <list default="true" id="b2d5f4f9-ebae-48b7-a5ee-aef4bd5cfa89" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/backend/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/frontend/streamlit_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/frontend/streamlit_app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/frontend/ui_pages_detail.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/frontend/ui_pages_detail.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/frontend/ui_pages_results.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/frontend/ui_pages_results.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_streamlit.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_streamlit.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -4,14 +4,14 @@ import os
 import requests
 import pandas as pd
 
-# PATH CONFIGURATION
+# --- PATH CONFIGURATION ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
 modules_dir = os.path.dirname(current_dir)
 backend_dir = os.path.join(modules_dir, 'backend')
 if backend_dir not in sys.path:
     sys.path.append(backend_dir)
 
-# IMPORTS
+# --- IMPORTS ---
 try:
     from app import get_all_places_with_id, get_place_details, get_place_photo_url
     from data_manager import ACTIVITY_LABELS
@@ -23,7 +23,9 @@ from ui_utils import apply_custom_css, prev_page, reset_app
 
 
 def show_details_page(df):
-
+    """
+    PAGE 6: Selected City Details & Top Places to Visit (Google Places API)
+    """
     apply_custom_css()
 
     target_city = st.session_state.selections.get('target_city')
@@ -37,7 +39,7 @@ def show_details_page(df):
         f"{st.session_state.selections.get('target_country', 'Country')} | {st.session_state.selections.get('target_region', 'Region')}")
     st.progress(100)
 
-    # UI STATE MANAGEMENT
+    # --- UI STATE MANAGEMENT ---
     if 'current_api_suggestions' not in st.session_state:
         st.session_state.current_api_suggestions = None
 
@@ -47,7 +49,7 @@ def show_details_page(df):
     user_activities = st.session_state.selections.get('selected_activities', ['culture'])
     main_filter = user_activities[0] if user_activities else 'default'
 
-    # MAIN VIEW (PLACE LIST AND MAP)
+    # --- MAIN VIEW (PLACE LIST AND MAP) ---
     if st.session_state.selected_place_id is None:
 
         display_activities = [ACTIVITY_LABELS.get(a, a).split(' ')[0] for a in user_activities]
@@ -55,6 +57,7 @@ def show_details_page(df):
         st.markdown(
             f"_Based on your primary interest: **{ACTIVITY_LABELS.get(main_filter, main_filter)}** ({', '.join(display_activities)})_")
 
+        # Fetch suggestions if not already done or if city has changed
         if st.session_state.current_api_suggestions is None or st.session_state.current_api_suggestions.get(
                 'city') != target_city:
             with st.spinner(f"Finding top {main_filter.upper()} spots in {target_city}..."):
@@ -80,10 +83,10 @@ def show_details_page(df):
                 st.rerun()
             return
 
-        # SUGGESTION LIST
+        # 1. SUGGESTION LIST
         st.markdown("#### 🎁 Suggested Spots:")
 
-        #
+        # CSS to reduce vertical spacing between cards
         st.markdown("""
             <style>
                 div[data-testid="stVerticalBlock"] > div > div {
@@ -104,7 +107,7 @@ def show_details_page(df):
 
         st.markdown("---")
 
-        # MAP SECTION
+        # 2. MAP SECTION (BOTTOM - FULL WIDTH)
         st.markdown("### 📍 Location Overview")
 
         map_data = pd.DataFrame(places)
@@ -124,7 +127,7 @@ def show_details_page(df):
             st.session_state.page = 5
             st.rerun()
 
-    # DETAIL VIEW
+    # DETAIL VIEW (SINGLE PLACE)
     else:
         place_id = st.session_state.selected_place_id
 
@@ -169,7 +172,7 @@ def show_details_page(df):
 
             st.markdown("---")
 
-            # COST, WEBSITE
+            # COST, WEBSITE VE HOURS
             col_cost, col_hours = st.columns(2)
 
             with col_cost:
@@ -201,7 +204,7 @@ def show_details_page(df):
             with col_hours:
                 st.subheader("Working Hours")
 
-                # ANLIK AÇILIŞ DURUMU
+                # OPEN/CLOSED STATUS
                 is_open = details.get('is_open')
                 if is_open is not None:
                     if is_open:
@@ -218,10 +221,8 @@ def show_details_page(df):
                 else:
                     st.info("Detailed working hours are not available.")
 
-            # Orijinal tam genişlikteki "Official Website" kısmı kaldırıldı.
-            # Kod akışına uyum için ekstra st.markdown("---") veya st.subheader("Official Website") artık burada yok.
 
-        # --- TRANSPORTATION SECTION ---
+        # TRANSPORTATION SECTION
         st.markdown("---")
         st.header("🚌 Transportation and Directions")
 
@@ -234,7 +235,7 @@ def show_details_page(df):
 
         st.markdown("---")  # Separator
 
-        # --- REVIEWS SECTION ---
+        #REVIEWS SECTION
         review_texts = details.get('review_texts', [])
 
         if review_texts:
@@ -248,21 +249,19 @@ def show_details_page(df):
 
         st.markdown("---")  # Separator
 
-        # --- PHOTO GALLERY SECTION ---
+        #PHOTO GALLERY SECTION
         st.header("🖼️ Photo Gallery")
 
-        # Exclude the main photo (the first one)
         gallery_refs = details['photo_refs'][1:] if details['photo_refs'] else []
 
         if not gallery_refs:
             st.info("Additional photos are not available for this location.")
         else:
-            # Streamlit columns count must not exceed the list length
-            num_cols = min(len(gallery_refs), 5)  # Maksimum 5 sütun sınırı
+            num_cols = min(len(gallery_refs), 5)
             gal_cols = st.columns(num_cols)
 
             for idx, ref in enumerate(gallery_refs):
-                if idx < num_cols:  # Yalnızca oluşturulan sütun sayısına kadar döngü yap
+                if idx < num_cols:
                     gallery_url = get_place_photo_url(ref)
                     with gal_cols[idx]:
                         st.image(gallery_url, use_container_width=True)
