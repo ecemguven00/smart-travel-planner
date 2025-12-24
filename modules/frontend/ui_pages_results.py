@@ -18,6 +18,7 @@ from ui_results_recommendations import show_recommendations_section, RECOMMENDAT
 if not hasattr(st, 'rerun'):
     st.rerun = st.experimental_rerun
 
+
 # --- PAGE 5: RESULTS & VISUALIZATION ---
 def show_results_page(df):
     """
@@ -135,7 +136,13 @@ def show_results_page(df):
                 with l2:
                     st.link_button("🏨 Booking.com", booking_url, width="stretch")
 
-                # --- INDIVIDUAL CHART ---
+                st.markdown(" ")
+                if st.button(f"🗺️ Explore Top Places in {row['city']}", key=f"explore_{row['city']}", width="stretch"):
+                    st.session_state.selections['target_city'] = row['city']
+                    st.session_state.page = 6  # for package 6
+                    st.rerun()
+
+                # INDIVIDUAL CHART
                 c_chart = create_city_chart(row, sels.get('selected_activities', []))
                 st.altair_chart(c_chart, width="stretch")
 
@@ -169,4 +176,4 @@ def show_results_page(df):
     if not filtered_df.empty:
         st.markdown("---")
         if st.button("🔄 Plan New Trip", key="btn_reset_footer", width="stretch"):
-             reset_app()
+            reset_app()

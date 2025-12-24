@@ -19,12 +19,25 @@ FILTER_MAP = {
 }
 
 # LOAD DATASET
+import os
+import pandas as pd
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# app.py, modules/backend klasöründe olduğu için
+# 2 kat yukarı çıkıp 'data' klasörüne ulaşıyoruz
+csv_path = os.path.join(current_dir, "..", "..", "data", "Worldwide_Travel_Cities.csv")
+
 try:
-    df = pd.read_csv(
-        'C:\\Users\\mirza\\Downloads\\smart-travel-planner-main\\smart-travel-planner-main\\data\\Worldwide_Travel_Cities.csv')
-except FileNotFoundError:
-    print("WARNING: CSV file not found. Please check the file path.")
-    df = pd.DataFrame({'city': [], 'latitude': [], 'longitude': []})
+    if os.path.exists(csv_path):
+        df = pd.read_csv(csv_path)
+    else:
+        # Eğer yukarıdaki yol tutmazsa (alternatif olarak proje ana dizini için)
+        df = pd.read_csv('data/Worldwide_Travel_Cities.csv')
+except Exception as e:
+    print(f"WARNING: CSV file could not be loaded. Error: {e}")
+    # Hata durumunda uygulama çökmesin diye boş şablon oluşturuyoruz
+    df = pd.DataFrame(columns=['City', 'Country', 'Latitude', 'Longitude'])
 
 
 #First Page Function

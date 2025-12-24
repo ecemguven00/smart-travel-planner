@@ -10,6 +10,9 @@ from ui_pages_input import (
 )
 from ui_pages_results import show_results_page
 
+# the new import for the details page
+from ui_pages_detail import show_details_page
+
 # --- APP CONFIG ---
 st.set_page_config(
     page_title="AI Travel Planner",
@@ -23,6 +26,7 @@ if 'page' not in st.session_state:
     st.session_state.page = 1
 if 'selections' not in st.session_state:
     st.session_state.selections = {}
+
 
 # --- MAIN ROUTING ---
 def main():
@@ -44,8 +48,9 @@ def main():
         show_activities_page(df)
     elif st.session_state.page == 5:
         show_results_page(df)
+    elif st.session_state.page == 6:
+        show_details_page(df)
+
 
 if __name__ == "__main__":
     main()
-    
-
