@@ -15,7 +15,6 @@ from ui_pages_detail import show_details_page
 
 
 # --- APP CONFIG ---
-# --- APP CONFIG ---
 st.set_page_config(
     page_title="AI Travel Planner",
     page_icon="modules/frontend/img/logo.jpg",
