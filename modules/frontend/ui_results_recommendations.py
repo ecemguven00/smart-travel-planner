@@ -19,7 +19,7 @@ try:
     )
     RECOMMENDATION_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️ Warning: Recommendation modules could not be loaded. Error: {e}")
+    print(f"Warning: Recommendation modules could not be loaded. Error: {e}")
     RECOMMENDATION_AVAILABLE = False
 
 def show_recommendations_section(df, user_selections, filtered_df):
@@ -29,7 +29,7 @@ def show_recommendations_section(df, user_selections, filtered_df):
     if not RECOMMENDATION_AVAILABLE:
         return
 
-    st.header("💡 Personalized Recommendations")
+    st.header("Personalized Recommendations")
     st.markdown("Based on your preferences, here are some destinations you might love!")
 
     # Recommendation Options
@@ -39,9 +39,9 @@ def show_recommendations_section(df, user_selections, filtered_df):
             "Recommendation Method:",
             options=['hybrid', 'preferences', 'similarity'],
             format_func=lambda x: {
-                'hybrid': '🎯 Hybrid (Best Match)',
-                'preferences': '⭐ By Preferences',
-                'similarity': '🔍 Similar Cities'
+                'hybrid': 'Hybrid (Best Match)',
+                'preferences': 'By Preferences',
+                'similarity': 'Similar Cities'
             }.get(x, x),
             help="Hybrid combines your preferences with similarity scores for best results."
         )
@@ -66,18 +66,18 @@ def show_recommendations_section(df, user_selections, filtered_df):
                 recommendations = recommendations[~recommendations['city'].isin(exclude_cities)]
 
             if recommendations.empty:
-                st.info("💭 Try adjusting your preferences to see more recommendations!")
+                st.info("Try adjusting your preferences to see more recommendations!")
             else:
                 # Display Recommendations
-                st.markdown(f"### 🎉 Top {len(recommendations)} Recommendations")
+                st.markdown(f"### Top {len(recommendations)} Recommendations")
 
                 for idx, (_, rec) in enumerate(recommendations.iterrows(), 1):
                     with st.container(border=True):
                         rec_col1, rec_col2 = st.columns([3, 1])
 
                         with rec_col1:
-                            st.markdown(f"#### {idx}. 🏙️ {rec['city']}, {rec['country']}")
-                            st.caption(f"📍 {rec['region']}")
+                            st.markdown(f"#### {idx}. {rec['city']}, {rec['country']}")
+                            st.caption(f"{rec['region']}")
                             st.markdown(f"_{rec.get('short_description', 'No description available')}_")
 
                         with rec_col2:
@@ -94,15 +94,16 @@ def show_recommendations_section(df, user_selections, filtered_df):
                         # Metrics
                         rec_metrics = st.columns(4)
                         with rec_metrics[0]:
-                            st.metric("☀️ Summer", f"{rec.get('avg_temp_summer', 0):.1f} °C")
+                            st.metric("Summer", f"{rec.get('avg_temp_summer', 0):.1f} °C")
                         with rec_metrics[1]:
-                            st.metric("❄️ Winter", f"{rec.get('avg_temp_winter', 0):.1f} °C")
+                            st.metric("Winter", f"{rec.get('avg_temp_winter', 0):.1f} °C")
                         with rec_metrics[2]:
-                            budget_symbol = "$" if rec.get('budget_level') == 'Budget' else "$$" if rec.get(
-                                'budget_level') == 'Mid-range' else "$$$"
-                            st.metric("💰 Budget", budget_symbol)
+                            budget_symbol = "Economy" if rec.get('budget_level') == 'Budget' else "Mid-Range" if rec.get(
+                                'budget_level') == 'Mid-range' else "Luxury"
+                            st.metric("Budget", budget_symbol)
                         with rec_metrics[3]:
-                            st.metric("✈️ Airport", f"{rec.get('distance_to_airport_km', 0):.1f} km")
+                            st.metric("Airport", f"{rec.get('distance_to_airport_km', 0):.1f} km")
+
 
                         # Show Activity Scores (Only for relevant user selections)
                         selected_activities = user_selections.get('selected_activities', [])
@@ -123,14 +124,14 @@ def show_recommendations_section(df, user_selections, filtered_df):
 
                         link_col1, link_col2 = st.columns(2)
                         with link_col1:
-                            st.link_button("✈️ Google Flights", google_flights_url, width="stretch")
+                            st.link_button("Google Flights", google_flights_url, width="stretch")
                         with link_col2:
-                            st.link_button("🏨 Booking.com", booking_url, width="stretch")
+                            st.link_button("Booking.com", booking_url, width="stretch")
 
                         st.markdown("---")
 
                 # Interactive Selection for Recommendation
-                st.markdown("### 🎯 Want to explore one of these?")
+                st.markdown("###  Want to explore one of these?")
                 selected_rec = st.selectbox(
                     "Select a recommended city to see details:",
                     options=["Choose a city..."] + recommendations['city'].tolist(),
@@ -138,7 +139,7 @@ def show_recommendations_section(df, user_selections, filtered_df):
                 )
 
                 if selected_rec and selected_rec != "Choose a city...":
-                    if st.button("🔍 View This City", width="stretch"):
+                    if st.button("View This City", width="stretch"):
                         # Set as target and redirect
                         st.session_state.selections['target_city'] = selected_rec
                         st.session_state.selections['target_region'] = None
