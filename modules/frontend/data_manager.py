@@ -36,11 +36,19 @@ SPECIAL_FILTERS = {
 ACTIVITY_COLS = list(ACTIVITY_LABELS.keys())
 
 @st.cache_data
-def load_data():
+def load_data(file_path: str | None = None):
+    """
+    CSV dosyasını yükler.
+    - file_path verilmezse varsayılan FILE_PATH kullanılır
+    - Streamlit ve script kullanımına uygundur
+    """
+
+    if file_path is None:
+        file_path = FILE_PATH
+
     try:
-        # We use the FILE_PATH variable to avoid path errors
         df = pd.read_csv(
-            FILE_PATH,
+            file_path,
             sep=',',
             quotechar='"',
             escapechar='\\',
@@ -48,7 +56,7 @@ def load_data():
             engine='python'
         )
     except FileNotFoundError:
-        st.error(f"CSV file not found at: {FILE_PATH}. Please make sure the file is in the same directory as this script.")
+        st.error(f"CSV file not found at: {file_path}")
         return pd.DataFrame()
     except Exception as e:
         st.error(f"Critical CSV Read Error: {e}")
