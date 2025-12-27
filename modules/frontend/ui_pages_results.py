@@ -26,7 +26,7 @@ def show_results_page(df):
     city cards, and visualization tabs.
     """
     apply_custom_css()
-    st.title("🎉 Your Travel Report")
+    st.title("Your Travel Report")
     st.progress(100)
 
     # Retrieve selections from session state
@@ -68,12 +68,12 @@ def show_results_page(df):
                 filtered_df = filtered_df[filtered_df[spec] == 1]
 
     # --- DISPLAY RESULTS ---
-    st.subheader(f"🔍 Found {len(filtered_df)} Destinations")
+    st.subheader(f" Found {len(filtered_df)} Destinations")
 
     if filtered_df.empty:
         st.warning("No cities found. Try reducing the 'Minimum Score' or changing budget criteria.")
         c1, c2 = st.columns(2)
-        if c1.button("⬅️ Change Criteria", key="btn_back_empty", width="stretch"): prev_page()
+        if c1.button("⬅Change Criteria", key="btn_back_empty", width="stretch"): prev_page()
         if c2.button("Start Over", key="btn_reset_empty", width="stretch"): reset_app()
     else:
         # Limit display to avoid UI lag
@@ -89,37 +89,38 @@ def show_results_page(df):
             with st.container(border=True):
                 c_head1, c_head2 = st.columns([3, 1])
                 with c_head1:
-                    st.markdown(f"## 🏙️ {row['city']}, {row['country']}")
+                    st.markdown(f"##  {row['city']}, {row['country']}")
                     st.caption(f"Region: {row['region']}")
 
                 # --- TAGS ---
                 with c_head2:
                     tags = []
-                    if row.get('Safe') == 1: tags.append("🛡️ Safe")
-                    if row.get('family_friendly') == 1: tags.append("👨‍👩‍👧‍👦 Family")
-                    if row.get('Alcohol-free') == 1: tags.append("🚫 No-Alcohol")
-                    if row.get('Halal-friendly') == 1: tags.append("☪️ Halal")
-                    if row.get('airport_closeness') == 1: tags.append("✈️ Near Airport")
+                    if row.get('Safe') == 1: tags.append("Safe")
+                    if row.get('family_friendly') == 1: tags.append("Family")
+                    if row.get('Alcohol-free') == 1: tags.append("No-Alcohol")
+                    if row.get('Halal-friendly') == 1: tags.append("Halal")
+                    if row.get('airport_closeness') == 1: tags.append("Near Airport")
                     if tags: st.info("  •  ".join(tags))
 
-                st.markdown(f"_{row.get('short_description', 'No description available')}_")
+
+                st.markdown(f"**{row.get('short_description', 'No description available')}**")
                 st.markdown("---")
 
                 # Metrics Row
                 m1, m2, m3, m4 = st.columns(4)
                 with m1:
-                    st.metric("☀️ Summer", f"{row.get('avg_temp_summer', 0):.1f} °C")
+                    st.metric("Summer", f"{row.get('avg_temp_summer', 0):.1f} °C")
                 with m2:
-                    st.metric("❄️ Winter", f"{row.get('avg_temp_winter', 0):.1f} °C")
+                    st.metric("Winter", f"{row.get('avg_temp_winter', 0):.1f} °C")
 
-                cost_symbol = "$" if row['budget_level'] == 'Budget' else "$$" if row[
-                                                                                      'budget_level'] == 'Mid-range' else "$$$"
+                cost_symbol = "Economy" if row['budget_level'] == 'Budget' else "Mid-Range" if row[
+                                                                                      'budget_level'] == 'Mid-range' else "Luxury"
                 with m3:
-                    st.metric("💰 Budget", cost_symbol, row['budget_level'])
+                    st.metric("Budget", cost_symbol)
                 with m4:
                     dist = row.get('distance_to_airport_km', 0)
                     airport_name = row.get('nearest_airport', '')
-                    st.metric("✈️ Airport", f"{dist:.1f} km",
+                    st.metric("Airport", f"{dist:.1f} km",
                               f"*{airport_name}*" if pd.notna(airport_name) else None)
 
                 # --- LINK BUTTONS ---
@@ -132,12 +133,12 @@ def show_results_page(df):
 
                 l1, l2 = st.columns(2)
                 with l1:
-                    st.link_button("✈️ Google Flights", google_flights_url, width="stretch")
+                    st.link_button("Google Flights", google_flights_url, width="stretch")
                 with l2:
-                    st.link_button("🏨 Booking.com", booking_url, width="stretch")
+                    st.link_button("Booking.com", booking_url, width="stretch")
 
                 st.markdown(" ")
-                if st.button(f"🗺️ Explore Top Places in {row['city']}", key=f"explore_{row['city']}", width="stretch"):
+                if st.button(f"Explore Top Places in {row['city']}", key=f"explore_{row['city']}", width="stretch"):
                     st.session_state.selections['target_city'] = row['city']
                     st.session_state.page = 6  # for package 6
                     st.rerun()
@@ -154,8 +155,8 @@ def show_results_page(df):
         # --- GLOBAL VISUALIZATION & ML TABS ---
         if len(filtered_df) > 1:
             st.markdown("---")
-            st.header("📊 Comparative Analysis")
-            tab1, tab2, tab3, tab4 = st.tabs(["Map View", "Budget vs Weather", "Activity Heatmap", "🔬 ML Analysis"])
+            st.header("Comparative Analysis")
+            tab1, tab2, tab3, tab4 = st.tabs(["Map View", "Budget vs Weather", "Activity Heatmap", "ML Analysis"])
 
             with tab1:
                 create_map(filtered_df)
@@ -175,5 +176,5 @@ def show_results_page(df):
     # Footer Action
     if not filtered_df.empty:
         st.markdown("---")
-        if st.button("🔄 Plan New Trip", key="btn_reset_footer", width="stretch"):
+        if st.button("Plan New Trip", key="btn_reset_footer", width="stretch"):
             reset_app()

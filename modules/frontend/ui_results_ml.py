@@ -21,7 +21,7 @@ try:
     )
     ML_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️ Warning: Feature Engineering modules could not be loaded. Error: {e}")
+    print(f"Warning: Feature Engineering modules could not be loaded. Error: {e}")
     ML_AVAILABLE = False
 
 def show_ml_analysis_tab(filtered_df):
@@ -29,27 +29,27 @@ def show_ml_analysis_tab(filtered_df):
     Displays the Machine Learning analysis tab with PCA and Clustering.
     """
     if not ML_AVAILABLE:
-        st.warning("⚠️ ML Analysis module could not be loaded. Please ensure 'ml_nlp' package is installed.")
+        st.warning("ML Analysis module could not be loaded. Please ensure 'ml_nlp' package is installed.")
         return
 
     if len(filtered_df) < 3:
-        st.info("ℹ️ At least 3 cities are required for ML analysis. Try loosening your filters to see more results.")
+        st.info(" At least 3 cities are required for ML analysis. Try loosening your filters to see more results.")
         return
 
-    st.markdown("### 🔬 Machine Learning Analysis")
+    st.markdown("### Machine Learning Analysis")
     st.markdown("Analyze your destinations using PCA (Dimensionality Reduction) and K-means Clustering.")
 
     # Analysis Options
     col1, col2 = st.columns(2)
     with col1:
-        show_pca = st.checkbox("📉 Show PCA Analysis", value=True)
+        show_pca = st.checkbox("Show PCA Analysis", value=True)
     with col2:
-        show_clustering = st.checkbox("🎯 Show K-means Clustering", value=True)
+        show_clustering = st.checkbox("Show K-means Clustering", value=True)
 
     # --- PCA ANALYSIS ---
     if show_pca:
         st.markdown("---")
-        st.subheader("📉 Principal Component Analysis (PCA)")
+        st.subheader("Principal Component Analysis (PCA)")
         st.markdown("PCA reduces the complexity of data to reveal underlying patterns.")
 
         try:
@@ -99,7 +99,7 @@ def show_ml_analysis_tab(filtered_df):
     # --- CLUSTERING ANALYSIS ---
     if show_clustering:
         st.markdown("---")
-        st.subheader("🎯 K-means Clustering")
+        st.subheader("K-means Clustering")
         st.markdown("K-means groups cities with similar characteristics together.")
 
         col1, col2 = st.columns(2)
@@ -157,7 +157,7 @@ def show_ml_analysis_tab(filtered_df):
             st.markdown("**Detailed Cluster Breakdown:**")
             for cluster_id in sorted(clustered_df['cluster'].unique()):
                 count = len(clustered_df[clustered_df['cluster'] == cluster_id])
-                with st.expander(f"🔵 Cluster {cluster_id} - {count} Cities"):
+                with st.expander(f"Cluster {cluster_id} - {count} Cities"):
                     characteristics, cities = get_cluster_characteristics(clustered_df, cluster_id)
 
                     if characteristics:

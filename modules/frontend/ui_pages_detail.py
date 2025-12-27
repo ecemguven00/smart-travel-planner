@@ -34,7 +34,7 @@ def show_details_page(df):
         if st.button("Return Home"): reset_app()
         return
 
-    st.title(f"📍 Exploring {target_city}")
+    st.title(f"Exploring {target_city}")
     st.caption(
         f"{st.session_state.selections.get('target_country', 'Country')} | {st.session_state.selections.get('target_region', 'Region')}")
     st.progress(100)
@@ -53,7 +53,7 @@ def show_details_page(df):
     if st.session_state.selected_place_id is None:
 
         display_activities = [ACTIVITY_LABELS.get(a, a).split(' ')[0] for a in user_activities]
-        st.markdown(f"### 🗺️ Top Places to Visit in {target_city}")
+        st.markdown(f"### Top Places to Visit in {target_city}")
         st.markdown(
             f"_Based on your primary interest: **{ACTIVITY_LABELS.get(main_filter, main_filter)}** ({', '.join(display_activities)})_")
 
@@ -77,14 +77,14 @@ def show_details_page(df):
         if not places:
             st.warning("No specific places found matching filters. Try changing your activity selection.")
             st.markdown("---")
-            if st.button("⬅️ Back to Results", width="stretch"):
+            if st.button("⬅Back to Results", width="stretch"):
                 st.session_state.current_api_suggestions = None
                 st.session_state.page = 5
                 st.rerun()
             return
 
         # 1. SUGGESTION LIST
-        st.markdown("#### 🎁 Suggested Spots:")
+        st.markdown("#### Suggested Spots:")
 
         # CSS to reduce vertical spacing between cards
         st.markdown("""
@@ -101,14 +101,14 @@ def show_details_page(df):
             with cols[idx % 2]:
                 with st.container(border=True):
                     st.markdown(f"**{idx + 1}. {place['name']}**")
-                    if st.button(f"Explore ➜", key=f"btn_{place['place_id']}", use_container_width=True):
+                    if st.button(f"Explore ➜", key=f"btn_{place['place_id']}", width="stretch"):
                         st.session_state.selected_place_id = place['place_id']
                         st.rerun()
 
         st.markdown("---")
 
         # 2. MAP SECTION (BOTTOM - FULL WIDTH)
-        st.markdown("### 📍 Location Overview")
+        st.markdown("### Location Overview")
 
         map_data = pd.DataFrame(places)
         map_data.rename(columns={'lat': 'latitude', 'lon': 'longitude'}, inplace=True)
@@ -118,11 +118,11 @@ def show_details_page(df):
             latitude='latitude',
             longitude='longitude',
             zoom=10,
-            use_container_width=True,
+            width="stretch",
         )
 
         st.markdown("---")
-        if st.button("⬅️ Back to Results", width="stretch"):
+        if st.button("⬅Back to Results", width="stretch"):
             st.session_state.current_api_suggestions = None
             st.session_state.page = 5
             st.rerun()
@@ -146,7 +146,7 @@ def show_details_page(df):
             main_photo_ref = details['photo_refs'][0] if details['photo_refs'] else None
             main_photo_url = get_place_photo_url(main_photo_ref)
 
-        if st.button("⬅️ Back to List"):
+        if st.button("⬅Back to List"):
             st.session_state.selected_place_id = None
             st.rerun()
 
@@ -158,7 +158,7 @@ def show_details_page(df):
         with col1_img:
             # Main image
             if main_photo_url and "maps.googleapis.com" in main_photo_url:
-                st.image(main_photo_url, use_container_width=True, caption=details.get('name'))
+                st.image(main_photo_url, width="stretch", caption=details.get('name'))
             else:
                 st.image("https://via.placeholder.com/600x400?text=No+Main+Photo", use_container_width=True,
                          caption="No Image")
@@ -179,9 +179,9 @@ def show_details_page(df):
                 st.subheader("Price Level")
                 price_level_info = details.get('price_level', 'Unknown Cost')
                 if price_level_info == 'Unknown Cost' or price_level_info == '':
-                    st.markdown("💵 **Entry Fee:** Free or Low Cost (Check Official Site for Details)")
+                    st.markdown("**Entry Fee:** Free or Low Cost (Check Official Site for Details)")
                 else:
-                    st.markdown(f"💵 **Entry Fee:** {price_level_info} (Price Level)")
+                    st.markdown(f"**Entry Fee:** {price_level_info} (Price Level)")
 
                 st.markdown("---")
 
@@ -190,8 +190,8 @@ def show_details_page(df):
                         f"""
                         <div style='text-align: center; margin-top: 5px; margin-bottom: 5px;'>
                             <a href="{details['website']}" target="_blank" 
-                               style="text-decoration: none; padding: 6px 12px; border: 1px solid #007bff; border-radius: 5px; background-color: #f0f2f6; color: #007bff; font-size: 0.9em; display: inline-block;">
-                                🌐 Visit Website
+                               style="text-decoration: none; padding: 6px 12px; border: 1px solid #OA9396; border-radius: 5px; background-color: rgba(240, 242, 246, 0.6); color: #005F73;font-weight: bold; font-size: 0.9em; display: inline-block;">
+                                Visit Website
                             </a>
                         </div>
                         """,
@@ -208,11 +208,11 @@ def show_details_page(df):
                 is_open = details.get('is_open')
                 if is_open is not None:
                     if is_open:
-                        st.success("✅ Currently OPEN")
+                        st.success("Currently OPEN")
                     else:
-                        st.error("❌ Currently CLOSED")
+                        st.error("Currently CLOSED")
                 else:
-                    st.warning("❓ Current status unknown.")
+                    st.warning("Current status unknown.")
 
                 hours = details.get('hours')
                 if hours and isinstance(hours, list):
@@ -224,12 +224,12 @@ def show_details_page(df):
 
         # TRANSPORTATION SECTION
         st.markdown("---")
-        st.header("🚌 Transportation and Directions")
+        st.header("Transportation and Directions")
 
         if details.get('url'):
             st.markdown(
                 "You can use Google Maps to plan how to reach this location. Clicking the link will automatically provide direction options.")
-            st.link_button("➡️ Get Directions (Google Maps)", details['url'], use_container_width=True)
+            st.link_button("Get Directions (Google Maps)", details['url'], width="stretch")
         else:
             st.info("No map link found for this location.")
 
@@ -239,18 +239,18 @@ def show_details_page(df):
         review_texts = details.get('review_texts', [])
 
         if review_texts:
-            st.header("⭐ Visitor Reviews (Top 3)")
+            st.header("Visitor Reviews (Top 3)")
             for i, review in enumerate(review_texts):
                 st.markdown(f"**Review #{i + 1}**")
                 st.info(review)
         else:
-            st.header("⭐ Visitor Reviews")
+            st.header("Visitor Reviews")
             st.info("No visitor reviews found for this location.")
 
         st.markdown("---")  # Separator
 
         #PHOTO GALLERY SECTION
-        st.header("🖼️ Photo Gallery")
+        st.header("Photo Gallery")
 
         gallery_refs = details['photo_refs'][1:] if details['photo_refs'] else []
 
@@ -264,4 +264,4 @@ def show_details_page(df):
                 if idx < num_cols:
                     gallery_url = get_place_photo_url(ref)
                     with gal_cols[idx]:
-                        st.image(gallery_url, use_container_width=True)
+                        st.image(gallery_url, width="stretch")
