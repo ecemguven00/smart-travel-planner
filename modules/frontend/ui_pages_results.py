@@ -71,7 +71,7 @@ def show_results_page(df):
     st.subheader(f" Found {len(filtered_df)} Destinations")
 
     if filtered_df.empty:
-        st.warning("No cities found. Try reducing the 'Minimum Score' or changing budget criteria.")
+        st.warning("No cities found.")
         c1, c2 = st.columns(2)
         if c1.button("⬅Change Criteria", key="btn_back_empty", width="stretch"): prev_page()
         if c2.button("Start Over", key="btn_reset_empty", width="stretch"): reset_app()
@@ -177,4 +177,5 @@ def show_results_page(df):
     if not filtered_df.empty:
         st.markdown("---")
         if st.button("Plan New Trip", key="btn_reset_footer", width="stretch"):
+
             reset_app()
