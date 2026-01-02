@@ -6,7 +6,7 @@ import os
 # Finds the exact directory where this script is located.
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 # Constructs the full path to the CSV file, assuming it's in the same directory.
-FILE_PATH = os.path.join(SCRIPT_DIR, "Worldwide_Travel_Cities_WithAirport_Precipitation.csv")
+FILE_PATH = os.path.join(SCRIPT_DIR, "Worldwide_Travel_Cities1.csv")
 
 # --- CONSTANTS ---
 ACTIVITY_LABELS = {
@@ -101,3 +101,4 @@ def load_data(file_path: str | None = None):
         df['avg_temp_monthly'] = df['avg_temp_monthly'].apply(safe_extract)
 
     return df.dropna(subset=['city', 'country'])
+
