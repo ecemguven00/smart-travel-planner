@@ -14,7 +14,7 @@ from ui_pages_results import show_results_page
 from ui_pages_detail import show_details_page
 
 
-# --- APP CONFIG ---
+#APP CONFIG
 st.set_page_config(
     page_title="AI Travel Planner",
     page_icon="modules/frontend/img/logo.jpg",
@@ -24,23 +24,23 @@ st.set_page_config(
 
 
 
-# --- SESSION STATE SETUP ---
+#SESSION STATE SETUP
 if 'page' not in st.session_state:
     st.session_state.page = 1
 if 'selections' not in st.session_state:
     st.session_state.selections = {}
 
 
-# --- MAIN ROUTING ---
+#MAIN ROUTING
 def main():
-    # Load Data
+
     df = load_data()
 
     if df.empty:
         st.warning("Data could not be loaded. Please ensure the CSV file is in the same directory.")
         return
 
-    # Routing Logic
+
     if st.session_state.page == 1:
         show_destination_page(df)
     elif st.session_state.page == 2:

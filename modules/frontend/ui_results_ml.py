@@ -6,7 +6,7 @@ import os
 import traceback
 from ui_charts import create_pca_scatter_plot, create_cluster_visualization
 
-# --- ML MODULE IMPORT LOGIC ---
+#ML MODULE IMPORT LOGIC
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
@@ -46,7 +46,7 @@ def show_ml_analysis_tab(filtered_df):
     with col2:
         show_clustering = st.checkbox("Show K-means Clustering", value=True)
 
-    # --- PCA ANALYSIS ---
+    #PCA ANALYSIS
     if show_pca:
         st.markdown("---")
         st.subheader("Principal Component Analysis (PCA)")
@@ -96,7 +96,7 @@ def show_ml_analysis_tab(filtered_df):
         except Exception as e:
             st.error(f"Error during PCA analysis: {str(e)}")
 
-    # --- CLUSTERING ANALYSIS ---
+    #CLUSTERING ANALYSIS
     if show_clustering:
         st.markdown("---")
         st.subheader("K-means Clustering")

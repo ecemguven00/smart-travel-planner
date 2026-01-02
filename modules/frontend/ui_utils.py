@@ -11,7 +11,7 @@ def get_base64_of_bin_file(bin_file):
         data = f.read()
     return base64.b64encode(data).decode()
 
-# --- CSS STYLING ---
+#CSS STYLING
 def apply_custom_css():
 
     bin_str = get_base64_of_bin_file('modules/frontend/img/Background.png')
@@ -122,7 +122,7 @@ def apply_custom_css():
     """, unsafe_allow_html=True)
 
 
-# --- NAVIGATION HELPERS ---
+#NAVIGATION HELPERS
 def next_page():
     st.session_state.page += 1
     st.rerun()
@@ -138,7 +138,7 @@ def reset_app():
         del st.session_state['random_cities']
     st.rerun()
 
-# --- URL NORMALIZER ---
+#URL NORMALIZER
 def normalize_for_url(text):
     text = str(text)
     replacements = {

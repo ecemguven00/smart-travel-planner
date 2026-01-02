@@ -155,7 +155,7 @@ def main():
             print(f"\nÖrnek şehirler:")
             print(cities.head(5).to_string(index=False))
     
-    # K-means Clustering (PCA ile)
+    # K-means Clustering
     print("\n" + "=" * 60)
     print("6. K-means Clustering Uygulanıyor (PCA ile)...")
     print("=" * 60)

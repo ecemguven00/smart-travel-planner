@@ -82,7 +82,7 @@ def create_cluster_visualization(clustered_df):
     if 'cluster' not in clustered_df.columns:
         return None, None
 
-    # Scatter plot: PC1 vs PC2 colored by cluster
+    # Scatter plot
     scatter = alt.Chart(clustered_df).mark_circle(size=100, opacity=0.6).encode(
         x=alt.X('latitude', title='Latitude'),
         y=alt.Y('longitude', title='Longitude'),
@@ -90,7 +90,7 @@ def create_cluster_visualization(clustered_df):
         tooltip=['city', 'country', 'cluster']
     ).interactive()
 
-    # Bar chart: Cluster distribution
+    # Bar chart
     cluster_counts = clustered_df['cluster'].value_counts().reset_index()
     cluster_counts.columns = ['cluster', 'count']
     cluster_counts = cluster_counts.sort_values('cluster')
