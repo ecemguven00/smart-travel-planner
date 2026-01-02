@@ -37,11 +37,10 @@ def show_recommendations_section(df, user_selections, filtered_df):
     with col1:
         recommendation_method = st.selectbox(
             "Recommendation Method:",
-            options=['hybrid', 'preferences', 'similarity'],
+            options=['hybrid', 'preferences'],
             format_func=lambda x: {
                 'hybrid': 'Hybrid (Best Match)',
-                'preferences': 'By Preferences',
-                'similarity': 'Similar Cities'
+                'preferences': 'By Preferences'
             }.get(x, x),
             help="Hybrid combines your preferences with similarity scores for best results."
         )

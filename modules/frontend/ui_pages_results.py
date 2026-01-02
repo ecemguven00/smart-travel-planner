@@ -6,12 +6,11 @@ import altair as alt
 from data_manager import ACTIVITY_LABELS
 from ui_utils import apply_custom_css, prev_page, reset_app
 from ui_charts import (
-    create_city_chart, create_map, create_scatter_plot,
-    create_heatmap
+    create_city_chart, create_map
 )
 
-# Yeni modülleri import et
-from ui_results_ml import show_ml_analysis_tab
+
+
 from ui_results_recommendations import show_recommendations_section, RECOMMENDATION_AVAILABLE
 
 # --- BACKWARD COMPATIBILITY FOR STREAMLIT ---
@@ -140,7 +139,9 @@ def show_results_page(df):
                 st.markdown(" ")
                 if st.button(f"Explore Top Places in {row['city']}", key=f"explore_{row['city']}", width="stretch"):
                     st.session_state.selections['target_city'] = row['city']
-                    st.session_state.page = 6  # for package 6
+                    st.session_state.selections['target_country'] = row['country']
+                    st.session_state.selections['target_region'] = row['region']
+                    st.session_state.page = 6
                     st.rerun()
 
                 # INDIVIDUAL CHART
@@ -152,30 +153,16 @@ def show_results_page(df):
             st.markdown("---")
             show_recommendations_section(df, sels, filtered_df)
 
-        # --- GLOBAL VISUALIZATION & ML TABS ---
+
         if len(filtered_df) > 1:
             st.markdown("---")
-            st.header("Comparative Analysis")
-            tab1, tab2, tab3, tab4 = st.tabs(["Map View", "Budget vs Weather", "Activity Heatmap", "ML Analysis"])
+            st.header("Map View")
 
-            with tab1:
-                create_map(filtered_df)
-            with tab2:
-                scatter = create_scatter_plot(filtered_df)
-                st.altair_chart(scatter, width="stretch")
-            with tab3:
-                if sels.get('selected_activities'):
-                    heatmap = create_heatmap(filtered_df, sels.get('selected_activities'))
-                    st.altair_chart(heatmap, width="stretch")
-                else:
-                    st.info("Select activities to see the comparison.")
-            with tab4:
-                # Modülden çağırıyoruz
-                show_ml_analysis_tab(filtered_df)
+            create_map(filtered_df)
+
 
     # Footer Action
     if not filtered_df.empty:
         st.markdown("---")
         if st.button("Plan New Trip", key="btn_reset_footer", width="stretch"):
-
             reset_app()
