@@ -12,31 +12,11 @@ airports = pd.read_csv("../data/airports.csv")
 countries = pd.read_csv("../data/countries.csv")
 worldwide = df_worldwide.copy()
 
-#print("=== First 5 rows ===")
-#print(worldwide.head(20))
-
-#worldwide.info()
-#worldwide.describe().T.plot(kind='bar')
-#worldwide.isnull().sum()
-#worldwide.duplicated().sum()
-
-#print('Columns available:', worldwide.columns.tolist())
-
-#unique_countries = worldwide['country'].nunique()
-#print("Number of unique countries:", unique_countries)
-
-#null_countries = worldwide['country'].isnull().sum()
-
-#print("Number of null values in Country column:", null_countries)
-
-#print("Unique countries:\n", worldwide['country'].unique())
-
 alcohol_free_countries = ['United Arab Emirates', 'Morocco', 'Egypt', 'Indonesia']
 halal_friendly_countries = ['United Arab Emirates', 'Morocco', 'Egypt', 'Indonesia']
 
 worldwide['Alcohol-free'] = worldwide['country'].isin(alcohol_free_countries).astype(int)
 worldwide['Halal-friendly'] = worldwide['country'].isin(halal_friendly_countries).astype(int)
-#print(worldwide[['city', 'country', 'Alcohol-free', 'Halal-friendly']].head(20))
 
 safe_countries = [
     'United Arab Emirates', 'Morocco', 'Egypt', 'Indonesia', 'Japan',
@@ -45,29 +25,13 @@ safe_countries = [
 
 worldwide['Safe'] = worldwide['country'].isin(safe_countries).astype(int)
 
-#print(worldwide[['city', 'country', 'Safe']].head(20))
-#print('Columns available:', worldwide.columns.tolist())
-
-#print(worldwide[worldwide.isnull().any(axis=1)])
-
-#country_counts = worldwide['country'].value_counts()
-
 budget_mapping = {
     'Budget': 1,
     'Mid-range': 2,
     'Luxury': 3
 }
 worldwide['budget_numeric'] = worldwide['budget_level'].map(budget_mapping)
-#print(worldwide[['budget_level', 'budget_numeric']].head(10))
 
-#null_count = worldwide['ideal_durations'].isnull().sum()
-
-#print("Null values in 'ideal_durations':", null_count)
-
-#unique_values = worldwide['ideal_durations'].unique()
-#print("Unique values in 'ideal_durations':", unique_values)
-
-#print("Number of unique values:", len(unique_values))
 import ast
 
 # Tüm unique duration türlerini çıkart
@@ -84,8 +48,6 @@ for d in all_durations:
     worldwide[d.replace(" ", "_").lower()] = worldwide['ideal_durations'].apply(lambda x: 1 if d in str(x) else 0)
 
 # Control
-#worldwide[['ideal_durations', 'short_trip', 'one_week', 'weekend', 'day_trip', 'long_trip']].head()
-#print(worldwide.columns)
 import json
 
 # JSON string'i dict'e çevir
@@ -109,10 +71,6 @@ worldwide['family_friendly'] = (
     (worldwide['adventure'] < 4) &
     (worldwide['nightlife'] < 4)
 ).astype(int)
-
-# First 10 rows 
-#print(worldwide[['city', 'country', 'family_friendly']].head(10))
-#print(worldwide.head(5))
 
 # Only get airports of type 'airport'
 airports_filtered = airports[airports['type'].isin(['large_airport','medium_airport'])]
@@ -165,8 +123,5 @@ def distance_to_score(distance):
 worldwide["airport_closeness"] = [distance_to_score(d) for d in distances_km]
 worldwide['nearest_airport'] = [airports_small.iloc[i]['airport_name'] for i in indices.flatten()]
 worldwide["distance_to_airport_km"] = distances_km
-
-#print(worldwide[['city', 'country', 'airport_closeness', 'nearest_airport', 'distance_to_airport_km']].head(20))
-#worldwide.drop(columns=["ideal_durations"], inplace=True)
 
 worldwide.to_csv("../data/Worldwide_Travel_Cities1.csv", index=False)

@@ -1,17 +1,18 @@
+
 import streamlit as st
 import sys
 import os
 import requests
 import pandas as pd
 
-# --- PATH CONFIGURATION ---
+#PATH CONFIGURATION
 current_dir = os.path.dirname(os.path.abspath(__file__))
 modules_dir = os.path.dirname(current_dir)
 backend_dir = os.path.join(modules_dir, 'backend')
 if backend_dir not in sys.path:
     sys.path.append(backend_dir)
 
-# --- IMPORTS ---
+#IMPORTS
 try:
     from app import get_all_places_with_id, get_place_details, get_place_photo_url
     from data_manager import ACTIVITY_LABELS
@@ -39,7 +40,7 @@ def show_details_page(df):
         f"{st.session_state.selections.get('target_country', 'Country')} | {st.session_state.selections.get('target_region', 'Region')}")
     st.progress(100)
 
-    # --- UI STATE MANAGEMENT ---
+    #UI STATE MANAGEMENT
     if 'current_api_suggestions' not in st.session_state:
         st.session_state.current_api_suggestions = None
 
@@ -49,7 +50,7 @@ def show_details_page(df):
     user_activities = st.session_state.selections.get('selected_activities', ['culture'])
     main_filter = user_activities[0] if user_activities else 'default'
 
-    # --- MAIN VIEW (PLACE LIST AND MAP) ---
+    #MAIN VIEW
     if st.session_state.selected_place_id is None:
 
         display_activities = [ACTIVITY_LABELS.get(a, a).split(' ')[0] for a in user_activities]
@@ -57,7 +58,7 @@ def show_details_page(df):
         st.markdown(
             f"_Based on your primary interest: **{ACTIVITY_LABELS.get(main_filter, main_filter)}** ({', '.join(display_activities)})_")
 
-        # Fetch suggestions if not already done or if city has changed
+
         if st.session_state.current_api_suggestions is None or st.session_state.current_api_suggestions.get(
                 'city') != target_city:
             with st.spinner(f"Finding top {main_filter.upper()} spots in {target_city}..."):
@@ -83,7 +84,7 @@ def show_details_page(df):
                 st.rerun()
             return
 
-        # 1. SUGGESTION LIST
+        # SUGGESTION LIST
         st.markdown("#### Suggested Spots:")
 
         # CSS to reduce vertical spacing between cards
@@ -107,7 +108,7 @@ def show_details_page(df):
 
         st.markdown("---")
 
-        # 2. MAP SECTION (BOTTOM - FULL WIDTH)
+        #MAP SECTION
         st.markdown("### Location Overview")
 
         map_data = pd.DataFrame(places)
@@ -127,7 +128,7 @@ def show_details_page(df):
             st.session_state.page = 5
             st.rerun()
 
-    # DETAIL VIEW (SINGLE PLACE)
+    # DETAIL VIEW
     else:
         place_id = st.session_state.selected_place_id
 
@@ -233,7 +234,7 @@ def show_details_page(df):
         else:
             st.info("No map link found for this location.")
 
-        st.markdown("---")  # Separator
+        st.markdown("---")
 
         #REVIEWS SECTION
         review_texts = details.get('review_texts', [])

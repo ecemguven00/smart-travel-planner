@@ -4,7 +4,7 @@ import os
 import traceback
 from data_manager import ACTIVITY_LABELS
 
-#RECOMMENDATION MODULE IMPORT LOGIC
+# --- RECOMMENDATION MODULE IMPORT LOGIC ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
@@ -139,6 +139,7 @@ def show_recommendations_section(df, user_selections, filtered_df):
 
                 if selected_rec and selected_rec != "Choose a city...":
                     if st.button("View This City", width="stretch"):
+                        # Set as target and redirect
                         st.session_state.selections['target_city'] = selected_rec
                         st.session_state.selections['target_region'] = None
                         st.session_state.selections['target_country'] = None

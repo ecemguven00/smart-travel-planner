@@ -6,7 +6,7 @@ from data_manager import ACTIVITY_LABELS, TRIP_DURATION_OPTIONS, SPECIAL_FILTERS
 from ui_utils import apply_custom_css, next_page, prev_page
 
 
-# --- PAGE 1: DESTINATION ---
+#PAGE 1: DESTINATION
 def show_destination_page(df):
     apply_custom_css()
     st.title("AI Travel Planner")
@@ -70,7 +70,6 @@ def show_destination_page(df):
 
         st.session_state.random_cities = pd.concat([city_df, random_city])
 
-    # Görselleştirme
     cols = st.columns(4)
 
 
@@ -98,7 +97,7 @@ def show_destination_page(df):
                     st.session_state.selections['target_region'] = None
                     next_page()
 
-# --- PAGE 2: BUDGET ---
+#PAGE 2: BUDGET
 def show_budget_page(df):
     apply_custom_css()
     st.title("Budget Planning")
@@ -132,7 +131,7 @@ def show_budget_page(df):
     if c2.button("Next Step: Duration ➔", width="stretch", type="primary"): next_page()
 
 
-# --- PAGE 3: DURATION ---
+#PAGE 3: DURATION
 def show_duration_page(df):
     apply_custom_css()
     st.title("Travel Duration")
@@ -161,7 +160,7 @@ def show_duration_page(df):
     if c2.button("Next Step: Activities ➔", width="stretch", type="primary"): next_page()
 
 
-# --- PAGE 4: ACTIVITIES ---
+#PAGE 4: ACTIVITIES
 def show_activities_page(df):
     apply_custom_css()
     st.title("Interests and Filters")

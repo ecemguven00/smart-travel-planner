@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-# LOCAL MODULE IMPORTS
+# --- LOCAL MODULE IMPORTS ---
 from data_manager import ACTIVITY_LABELS
 from ui_utils import apply_custom_css, prev_page, reset_app
 from ui_charts import (
@@ -13,12 +13,12 @@ from ui_charts import (
 
 from ui_results_recommendations import show_recommendations_section, RECOMMENDATION_AVAILABLE
 
-#BACKWARD COMPATIBILITY FOR STREAMLIT
+# --- BACKWARD COMPATIBILITY FOR STREAMLIT ---
 if not hasattr(st, 'rerun'):
     st.rerun = st.experimental_rerun
 
 
-#PAGE 5: RESULTS & VISUALIZATION
+# --- PAGE 5: RESULTS & VISUALIZATION ---
 def show_results_page(df):
     """
     Main function to display the results page, including filters,
@@ -33,7 +33,7 @@ def show_results_page(df):
     target_city = sels.get('target_city')
     filtered_df = df.copy()
 
-    #FILTER LOGIC
+    # --- FILTER LOGIC ---
     if target_city:
         filtered_df = filtered_df[filtered_df['city'] == target_city]
     else:
@@ -66,7 +66,7 @@ def show_results_page(df):
             if spec in df.columns:
                 filtered_df = filtered_df[filtered_df[spec] == 1]
 
-    #DISPLAY RESULTS
+    # --- DISPLAY RESULTS ---
     st.subheader(f" Found {len(filtered_df)} Destinations")
 
     if filtered_df.empty:
@@ -91,7 +91,7 @@ def show_results_page(df):
                     st.markdown(f"##  {row['city']}, {row['country']}")
                     st.caption(f"Region: {row['region']}")
 
-                #TAGS
+                # --- TAGS ---
                 with c_head2:
                     tags = []
                     if row.get('Safe') == 1: tags.append("Safe")
@@ -122,7 +122,7 @@ def show_results_page(df):
                     st.metric("Airport", f"{dist:.1f} km",
                               f"*{airport_name}*" if pd.notna(airport_name) else None)
 
-                #LINK BUTTONS
+                # --- LINK BUTTONS ---
                 st.markdown(" ")
                 city_query = str(row['city']).replace(" ", "+")
                 country_query = str(row['country']).replace(" ", "+")
@@ -148,7 +148,7 @@ def show_results_page(df):
                 c_chart = create_city_chart(row, sels.get('selected_activities', []))
                 st.altair_chart(c_chart, width="stretch")
 
-        #RECOMMENDATION SECTION (AI)
+        # --- RECOMMENDATION SECTION (AI) ---
         if RECOMMENDATION_AVAILABLE:
             st.markdown("---")
             show_recommendations_section(df, sels, filtered_df)
@@ -161,7 +161,7 @@ def show_results_page(df):
             create_map(filtered_df)
 
 
-
+    # Footer Action
     if not filtered_df.empty:
         st.markdown("---")
         if st.button("Plan New Trip", key="btn_reset_footer", width="stretch"):
