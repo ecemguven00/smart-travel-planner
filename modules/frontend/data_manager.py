@@ -101,4 +101,3 @@ def load_data(file_path: str | None = None):
         df['avg_temp_monthly'] = df['avg_temp_monthly'].apply(safe_extract)
 
     return df.dropna(subset=['city', 'country'])
-
